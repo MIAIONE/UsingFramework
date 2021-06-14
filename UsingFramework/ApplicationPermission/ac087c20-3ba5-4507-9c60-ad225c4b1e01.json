@@ -1,0 +1,12 @@
+{
+  "requirePermission": {
+    "basePermission": [
+      { "token": 17 }
+    ]
+  },
+  "appName": "test app",
+  "md5": "ac087c20-3ba5-4507-9c60-ad225c4b1e01",
+  "PermissionSet": [
+    { "tokenName": "System.Security.Permissions.UIPermission" , "State": true }
+  ]
+}

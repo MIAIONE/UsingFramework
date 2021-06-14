@@ -1,7 +1,10 @@
 {
   "requirePermission": {
-    "basePermission": [ { "token": 17} ]
+    "basePermission": [
+      { "token": 17 }
+    ]
   },
   "appFiles": "1.app",
-  "appName": "test app" 
+  "appName": "test app",
+  "guid": "ac087c20-3ba5-4507-9c60-ad225c4b1e01"
 }

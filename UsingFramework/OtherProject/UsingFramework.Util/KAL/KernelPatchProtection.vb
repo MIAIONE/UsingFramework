@@ -24,16 +24,10 @@ Namespace KernelAbstractionLayer
                 KernelPatchProtection.RemovePermission(per, token)
             End Sub
             Public Shared Function GetBasePermissionList(RT As RequireToken) As List(Of IPermission)
+
                 Dim resultList As New List(Of IPermission)
                 For Each basetoken As BasePermissionItem In RT.RequirePermission.BasePermission
                     resultList.Add(GetSelectPerSet(basetoken.Token, GetUserChecked(GetSelectPerSet(basetoken.Token, False), RT.AppName)))
-                Next
-                Return resultList
-            End Function
-            Public Shared Function GetOptionalPermissionList(RT As RequireToken) As List(Of IPermission)
-                Dim resultList As New List(Of IPermission)
-                For Each opttoken As OptionalPermissionItem In RT.RequirePermission.OptionalPermission
-                    resultList.Add(GetSelectPerSet(opttoken.Token, GetUserChecked(GetSelectPerSet(opttoken.Token, False), RT.AppName)))
                 Next
                 Return resultList
             End Function

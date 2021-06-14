@@ -1,7 +1,6 @@
 {
   "requirePermission": {
-    "basePermission": [ { "token": 17} ],
-    "optionalPermission": [ { "token": -1 } ]
+    "basePermission": [ { "token": 17} ]
   },
   "appFiles": "1.app",
   "appName": "test app" 

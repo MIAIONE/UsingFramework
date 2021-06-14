@@ -7,14 +7,8 @@ End Class
 Public Class BasePermissionItem
     Public Property Token As Integer
 End Class
-
-Public Class OptionalPermissionItem
-    Public Property Token As Integer
-End Class
-
 Public Class RequirePermission
     Public Property BasePermission As List(Of BasePermissionItem)
-    Public Property OptionalPermission As List(Of OptionalPermissionItem)
 End Class
 Public Enum Permissions As Integer
     DataProtectionPermission

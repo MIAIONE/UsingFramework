@@ -46,11 +46,11 @@ Public Class EntryPoint
 
 
                     Dim tData = KernelTask.CreateKernelTask(appFilePath, tokenR)
-                        tData.Wait()
-                        tData.Result.AssemblyLoader.Run("----------")
-                        Dim TaskQueryT As New KernelTask.TaskQuery(pid, RT.AppName)
-                        TaskListGrp.Add(TaskQueryT, tData)
-                    End If
+                    tData.Wait()
+                    tData.Result.AssemblyLoader.Run(filebasePath + "\")
+                    Dim TaskQueryT As New KernelTask.TaskQuery(pid, RT.AppName)
+                    TaskListGrp.Add(TaskQueryT, tData)
+                End If
             Next
         Next
 

@@ -2,14 +2,14 @@
   "requirePermission": {
     "basePermission": [
       { "token": 11 },
-      { "token": 0 },
+      { "token": 3 },
       { "token": 8 },
       { "token": 9 },
       { "token": 10 },
       { "token": 14 }
     ]
   },
-  "appFiles": "1.app",
+  "appFiles": "apptest.dll",
   "appName": "test app",
   "appComName": "Test",
   "guid": "ac087c20-3ba5-4507-9c60-ad225c4b1e01"

@@ -51,10 +51,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Import Include="Microsoft.VisualBasic" />
-    <Import Include="Scallion.Core" />
-    <Import Include="Scallion.DomainModels" />
-    <Import Include="Scallion.DomainModels.Components" />
-    <Import Include="Scallion.Tools.Essentials" />
+    <Import Include="OpenTK" />
+    <Import Include="OpenTK.Graphics" />
+    <Import Include="OpenTK.Graphics.ES30" />
+    <Import Include="OpenTK.Graphics.OpenGL" />
+    <Import Include="OpenTK.Graphics.OpenGL4" />
+    <Import Include="OpenTK.Platform.Windows" />
     <Import Include="System" />
     <Import Include="System.Collections" />
     <Import Include="System.Collections.Generic" />
@@ -99,6 +101,9 @@
     <Content Include="ApplicationPermission.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="33.pmx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="app.config" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
@@ -109,29 +114,21 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+    <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
     <Content Include="sample.pmm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="NDesk.Options, Version=0.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NDesk.Options.0.2.1\lib\NDesk.Options.dll</HintPath>
-    </Reference>
-    <Reference Include="Scallion, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Scallion.1.0.0\lib\net46\Scallion.dll</HintPath>
-    </Reference>
-    <Reference Include="Scallion.Tools.Essentials, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Scallion.Tools.Essentials.1.1.1\lib\net46\Scallion.Tools.Essentials.dll</HintPath>
+    <Reference Include="OpenTK, Version=3.3.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OpenTK.3.3\lib\net20\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Numerics.Vectors.4.1.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>

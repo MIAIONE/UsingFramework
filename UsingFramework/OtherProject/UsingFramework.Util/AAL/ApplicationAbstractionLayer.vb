@@ -1,5 +1,5 @@
 ﻿Imports System.Runtime.CompilerServices
-
+Imports UsingFramework.Util.KernelAbstractionLayer
 Namespace ApplicationAbstractionLayer
 
     Public NotInheritable Class API
@@ -30,17 +30,12 @@ Namespace ApplicationAbstractionLayer
             Console.Write(t)
             ReSetColor()
         End Sub
-
+        Public Shared Sub TryGetPermission(AppCOMName As String)
+            'MsgBox(AppDomain.CurrentDomain.BaseDirectory + "\Data\" + KernelSecurity.PatchGuard.GetSafeValue(AppCOMName) + "\applicationpermission.json")
+            Dim rt As RequireToken = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "\Data\" + KernelSecurity.PatchGuard.GetSafeValue(AppCOMName) + "\applicationpermission.json", Encoding.UTF8).ToRequireToken
+            rt.AppName = KernelSecurity.PatchGuard.GetSafeValue(rt.AppName)
+            KernelSecurity.PatchGuard.RevisePermission(rt)
+        End Sub
     End Class
-    Public Module ExcpFunc
-        <Extension>
-        Public Function ToRequireToken(json As String) As RequireToken
-            Return JsonConvert.DeserializeObject(Of RequireToken)(json)
-        End Function
-        <Extension>
-        Public Function FromRequireToken(classt As RequireToken) As String
-            Return JsonConvert.SerializeObject(classt)
-        End Function
 
-    End Module
 End Namespace

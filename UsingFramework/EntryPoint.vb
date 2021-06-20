@@ -27,15 +27,24 @@ Public Class EntryPoint
                     pid += 1
                     Dim filebasePath As String = Path.GetDirectoryName(files)
                     Dim RT As RequireToken = File.ReadAllText(files).ToRequireToken
+                    RT.AppName = KernelSecurity.PatchGuard.GetSafeValue(RT.AppName)
                     Dim appFilePath As String = filebasePath + "\" + RT.AppFiles
-                    Dim tokenR As List(Of IPermission) = KernelSecurity.PatchGuard.GetBasePermissionList(RT)
+                    Dim tokenR As List(Of IPermission)
+                    If File.Exists("ApplicationPermission\" + RT.GUID + ".json") Then
+                        Dim appPerset As ApplicationPermissionSet = File.ReadAllText("ApplicationPermission\" + RT.GUID + ".json").ToAppToken
+                        tokenR = KernelSecurity.PatchGuard.GetSystemDefineToken(appPerset)
+                    Else
+                        tokenR = KernelSecurity.PatchGuard.GetBasePermissionList(RT)
+                        KernelSecurity.PatchGuard.SavePermission(RT, tokenR)
+                    End If
+
 
                     Dim tData = KernelTask.CreateKernelTask(appFilePath, tokenR)
-                    tData.Wait()
-                    tData.Result.AssemblyLoader.Run("----------")
-                    Dim TaskQueryT As New KernelTask.TaskQuery(pid, RT.AppName)
-                    TaskListGrp.Add(TaskQueryT, tData)
-                End If
+                        tData.Wait()
+                        tData.Result.AssemblyLoader.Run("----------")
+                        Dim TaskQueryT As New KernelTask.TaskQuery(pid, RT.AppName)
+                        TaskListGrp.Add(TaskQueryT, tData)
+                    End If
             Next
         Next
 

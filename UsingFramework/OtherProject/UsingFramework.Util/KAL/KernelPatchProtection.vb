@@ -1,10 +1,48 @@
 ﻿
+Imports System.Runtime.CompilerServices
+Imports System.Text.RegularExpressions
 Imports UsingFramework.Util.ApplicationAbstractionLayer
 
 Namespace KernelAbstractionLayer
+    Public Module ExcpFunc
+        <Extension>
+        Public Function ToRequireToken(json As String) As RequireToken
+            Return JsonConvert.DeserializeObject(Of RequireToken)(json)
+        End Function
+        <Extension>
+        Public Function FromRequireToken(classt As RequireToken) As String
+            Return JsonConvert.SerializeObject(classt)
+        End Function
+        <Extension>
+        Public Function ToAppToken(json As String) As ApplicationPermissionSet
+            Return JsonConvert.DeserializeObject(Of ApplicationPermissionSet)(json)
+        End Function
+        <Extension>
+        Public Function FromAppToken(classt As ApplicationPermissionSet) As String
+            Return JsonConvert.SerializeObject(classt)
+        End Function
+    End Module
     Public NotInheritable Class KernelSecurity
 
         Public NotInheritable Class PatchGuard
+            Public Shared Function GetSafeValue(value As String) As String
+                If String.IsNullOrEmpty(value) Then Return String.Empty
+                For Each chars As Char In My.Resources.SpChars
+                    value.Replace(chars.ToString, String.Empty)
+                Next
+                Return value
+            End Function
+            Public Shared Function GetMD5(path As String) As String
+                If Not File.Exists(path) Then Return Nothing
+                Dim fs As FileStream = New FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)
+                Dim md5Provider As MD5CryptoServiceProvider = New MD5CryptoServiceProvider()
+                Dim buffer As Byte() = md5Provider.ComputeHash(fs)
+                Dim resule As String = BitConverter.ToString(buffer)
+                resule = resule.Replace("-", "")
+                md5Provider.Clear()
+                fs.Close()
+                Return resule.ToUpper
+            End Function
 
             Public Shared Function LoadAssembly(ApplicationPath As String, perlist As List(Of IPermission), Optional opt As LoaderOptimization = LoaderOptimization.MultiDomain, Optional allowdownloaddll As Boolean = False) As AppProcTask
                 Return KernelPatchProtection.KpCreate(ApplicationPath, perlist, opt, allowdownloaddll)
@@ -31,6 +69,14 @@ Namespace KernelAbstractionLayer
                 Next
                 Return resultList
             End Function
+            Public Shared Function GetSystemDefineToken(Aps As ApplicationPermissionSet) As List(Of IPermission)
+
+                Dim resultList As New List(Of IPermission)
+                For Each basetoken As PermissionSetItem In Aps.PermissionSet
+                    resultList.Add(GetSelectPerSet(GetPermissionsByString(basetoken.TokenName), Boolean.Parse(basetoken.State)))
+                Next
+                Return resultList
+            End Function
             Public Shared Function GetUserChecked(perset As IPermission, appname As String) As Boolean
                 Dim result As MsgBoxResult = MsgBox("是否允许 『 " + appname + " 』 获取 " + GetPerSetByName(perset.ToXml.Attribute("class").Split(",")(0).Trim) + " 的权限", MsgBoxStyle.MsgBoxSetForeground + vbYesNo, "权限管理")
                 If result = MsgBoxResult.Yes Then
@@ -39,12 +85,63 @@ Namespace KernelAbstractionLayer
                     Return False
                 End If
             End Function
+
+            Public Shared Function GetUnrestrictedState(evtoken As IPermission) As Boolean
+                Return Boolean.Parse(evtoken.ToXml.Attribute("Unrestricted") IsNot Nothing)
+            End Function
+            Public Shared Sub RevisePermission(RT As RequireToken)
+                Dim userAllowPerset As List(Of IPermission) = GetBasePermissionList(RT)
+                SavePermission(RT, userAllowPerset)
+            End Sub
+            Public Shared Sub SavePermission(RT As RequireToken, Token As List(Of IPermission))
+                Dim appSettings As ApplicationPermissionSet = New ApplicationPermissionSet With {
+                    .RequirePermission = RT.RequirePermission
+                }
+                Dim pstlist As New List(Of PermissionSetItem)
+                For Each evtoken As IPermission In Token
+                    Dim pst As New PermissionSetItem With {
+                        .TokenName = evtoken.ToXml.Attribute("class").Split(",")(0).Trim,
+                        .State = GetUnrestrictedState(evtoken).ToString
+                    }
+                    pstlist.Add(pst)
+                Next
+                appSettings.PermissionSet = pstlist
+                appSettings.AppName = RT.AppName
+                appSettings.AppCOMName = RT.AppCOMName
+                File.WriteAllText("ApplicationPermission\" + RT.GUID + ".json", appSettings.FromAppToken, Encoding.UTF8)
+            End Sub
+            Public Shared Function GetPermissionsByString(tokenstr As String) As Permissions
+                Return PermissionToPerSet.Item(tokenstr)
+            End Function
+            Public Shared ReadOnly PermissionToPerSet As New Dictionary(Of String, Permissions) From {
+            {"System.Security.Permissions.DataProtectionPermission", Permissions.DataProtectionPermission},
+             {"System.Security.Permissions.EnvironmentPermission", Permissions.EnvironmentPermission},
+             {"System.Security.Permissions.FileDialogPermission", Permissions.FileDialogPermission},
+             {"System.Security.Permissions.FileIOPermission", Permissions.FileIOPermission},
+             {"System.Security.Permissions.GacIdentityPermission", Permissions.GacIdentityPermission},
+             {"System.Security.Permissions.IsolatedStorageFilePermission", Permissions.IsolatedStorageFilePermission},
+             {"System.Security.Permissions.KeyContainerPermission", Permissions.KeyContainerPermission},
+             {"System.Security.Permissions.MediaPermission", Permissions.MediaPermission},
+             {"System.Security.Permissions.PrincipalPermission", Permissions.PrincipalPermission},
+             {"System.Security.Permissions.PublisherIdentityPermission", Permissions.PublisherIdentityPermission},
+             {"System.Security.Permissions.ReflectionPermission", Permissions.ReflectionPermission},
+             {"System.Security.Permissions.RegistryPermission", Permissions.RegistryPermission},
+             {"System.Security.Permissions.SecurityPermission", Permissions.SecurityPermission},
+             {"System.Security.Permissions.SiteIdentityPermission", Permissions.SiteIdentityPermission},
+             {"System.Security.Permissions.StorePermission", Permissions.StorePermission},
+             {"System.Security.Permissions.StrongNameIdentityPermission", Permissions.StrongNameIdentityPermission},
+             {"System.Security.Permissions.TypeDescriptorPermission", Permissions.TypeDescriptorPermission},
+             {"System.Security.Permissions.UIPermission", Permissions.UIPermission},
+             {"System.Security.Permissions.UrlIdentityPermission", Permissions.UrlIdentityPermission},
+             {"System.Security.Permissions.WebBrowserPermission", Permissions.WebBrowserPermission},
+             {"System.Security.Permissions.ZoneIdentityPermission", Permissions.ZoneIdentityPermission}
+            }
             Public Shared ReadOnly PermissionInfo As New Dictionary(Of String, String) From {
              {"System.Security.Permissions.DataProtectionPermission", "访问、修改 『 加密数据和内存 』 "},
              {"System.Security.Permissions.EnvironmentPermission", "访问、修改 『 系统和用户环境变量 』 "},
              {"System.Security.Permissions.FileDialogPermission", "通过 『 文件对话框 』 访问、修改 『 文件或文件夹 』 "},
              {"System.Security.Permissions.FileIOPermission", "访问、修改 『 文件和文件夹 』 "},
-             {"System.Security.Permissions.GacIdentityPermission	", "访问、修改 『 全局程序集缓存中产生的文件的标识 』 "},
+             {"System.Security.Permissions.GacIdentityPermission", "访问、修改 『 全局程序集缓存中产生的文件的标识 』 "},
              {"System.Security.Permissions.IsolatedStorageFilePermission", "访问、修改 『 私有虚拟文件系统允许的用法 』 "},
              {"System.Security.Permissions.KeyContainerPermission", "访问、修改 『 访问密钥容器 』 "},
              {"System.Security.Permissions.MediaPermission", "让 『 音频、图像和视频媒体 』 在 『 不完全可信的应用程序 』 中运行"},
@@ -161,8 +258,10 @@ Namespace KernelAbstractionLayer
             End Function
             Public Shared Function KpCreate(ApplicationPath As String, perlist As List(Of IPermission), Optional opt As LoaderOptimization = LoaderOptimization.MultiDomain, Optional allowdownloaddll As Boolean = False) As AppProcTask
                 Dim PerSet As PermissionSet = GetNewPermission(False)
-                AddPermission(PerSet, New SecurityPermission(SecurityPermissionFlag.Execution))
-                AddPermission(PerSet, New FileIOPermission(FileIOPermissionAccess.AllAccess, Path.GetDirectoryName(ApplicationPath)))
+                AddPermission(PerSet, New SecurityPermission(SecurityPermissionFlag.AllFlags))
+                AddPermission(PerSet, New UIPermission(UIPermissionWindow.AllWindows, UIPermissionClipboard.AllClipboard))
+                AddPermission(PerSet, New FileIOPermission(FileIOPermissionAccess.AllAccess, New String() {Path.GetDirectoryName(ApplicationPath), Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory + "\ApplicationPermission")}))
+
                 For Each Token As IPermission In perlist
                     AddPermission(PerSet, Token)
                 Next

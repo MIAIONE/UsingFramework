@@ -3,6 +3,7 @@
     Public Property AppFiles As String
     Public Property AppName As String
     Public Property GUID As String
+    Public Property AppCOMName As String
 End Class
 Public Class BasePermissionItem
     Public Property Token As Integer
@@ -19,7 +20,7 @@ End Class
 Public Class ApplicationPermissionSet
     Public Property RequirePermission As RequirePermission
     Public Property AppName As String
-    Public Property Md5 As String
+    Public Property AppCOMName As String
     Public Property PermissionSet As List(Of PermissionSetItem)
 End Class
 

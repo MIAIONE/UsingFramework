@@ -94,6 +94,7 @@
     <Import Include="System.Runtime.InteropServices" />
     <Import Include="System.Security" />
     <Import Include="System.Security.AccessControl" />
+    <Import Include="System.Security.Cryptography" />
     <Import Include="System.Security.Permissions" />
     <Import Include="System.Security.Policy" />
     <Import Include="System.Security.Principal" />

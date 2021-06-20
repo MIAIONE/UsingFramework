@@ -128,7 +128,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ApplicationPermission\ac087c20-3ba5-4507-9c60-ad225c4b1e01.json">
+    <Content Include="ApplicationPermission\0.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="My Project\Application.myapp">

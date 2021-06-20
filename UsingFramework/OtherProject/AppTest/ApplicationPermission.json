@@ -1,7 +1,12 @@
 {
   "requirePermission": {
     "basePermission": [
-      { "token": 11 }
+      { "token": 11 },
+      { "token": 0 },
+      { "token": 8 },
+      { "token": 9 },
+      { "token": 10 },
+      { "token": 14 }
     ]
   },
   "appFiles": "1.app",

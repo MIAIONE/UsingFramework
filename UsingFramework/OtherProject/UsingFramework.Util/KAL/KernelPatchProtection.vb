@@ -258,7 +258,7 @@ Namespace KernelAbstractionLayer
             End Function
             Public Shared Function KpCreate(ApplicationPath As String, perlist As List(Of IPermission), Optional opt As LoaderOptimization = LoaderOptimization.MultiDomain, Optional allowdownloaddll As Boolean = False) As AppProcTask
                 Dim PerSet As PermissionSet = GetNewPermission(False)
-                AddPermission(PerSet, New SecurityPermission(SecurityPermissionFlag.AllFlags))
+                AddPermission(PerSet, New SecurityPermission(SecurityPermissionFlag.AllFlags)) '完整权限已经开启
                 AddPermission(PerSet, New UIPermission(UIPermissionWindow.AllWindows, UIPermissionClipboard.AllClipboard))
                 AddPermission(PerSet, New FileIOPermission(FileIOPermissionAccess.AllAccess, New String() {Path.GetDirectoryName(ApplicationPath), Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory + "\ApplicationPermission")}))
 
@@ -337,7 +337,7 @@ Namespace KernelAbstractionLayer
                     If _assembly Is Nothing Then Return Nothing
                     Dim wormMain = _assembly.GetTypes().FirstOrDefault(Function(m) m.GetInterface(GetType(IPlugin).Name) IsNot Nothing)
                     Dim tmpObj = CType(Activator.CreateInstance(wormMain), IPlugin)
-                    Return tmpObj.Init(args)
+                    Return tmpObj.OpenEntryPoint(args)
                 End Function
             End Class
         End Class

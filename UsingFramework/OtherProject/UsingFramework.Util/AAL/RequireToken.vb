@@ -24,7 +24,9 @@ Public Class ApplicationPermissionSet
     Public Property PermissionSet As List(Of PermissionSetItem)
 End Class
 
-
+''' <summary>
+''' 权限枚举列表
+''' </summary>
 Public Enum Permissions As Integer
     DataProtectionPermission
     EnvironmentPermission

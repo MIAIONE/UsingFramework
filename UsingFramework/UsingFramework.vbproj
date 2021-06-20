@@ -101,7 +101,7 @@
     <Import Include="UsingFramework.Util.KernelAbstractionLayer" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EntryPoint.vb" />
+    <Compile Include="InitProgram\EntryPoint.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -148,16 +148,12 @@
       <Name>UsingFramework.Util</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="InitProgram\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
     <PostBuildEvent>cmd /c md "D:\OSX 2\UsingFramework\bin\Release\Data"
 cmd /c md "D:\OSX 2\UsingFramework\bin\Release\Data\Test"
-cmd /c copy /y "D:\OSX 2\UsingFramework\OtherProject\AppTest\bin\Release\AppTest.dll" "D:\OSX 2\UsingFramework\bin\Release\Data\Test\1.app"
-cmd /c copy /y "D:\OSX 2\UsingFramework\OtherProject\AppTest\bin\Release\ApplicationPermission.json" "D:\OSX 2\UsingFramework\bin\Release\Data\Test\ApplicationPermission.json"
-
+cmd /c copy /y "D:\OSX 2\UsingFramework\OtherProject\AppTest\bin\Release\*" "D:\OSX 2\UsingFramework\bin\Release\Data\Test\*"
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

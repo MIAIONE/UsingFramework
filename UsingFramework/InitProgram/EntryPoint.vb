@@ -17,6 +17,12 @@ Public Class EntryPoint
 
 
         API.WriteLine("Boot Kernel...")
+        If Directory.Exists("Data") = False Then
+            Directory.CreateDirectory("Data")
+        End If
+        If Directory.Exists("ApplicationPermission") = False Then
+            Directory.CreateDirectory("ApplicationPermission")
+        End If
         Dim pid As UInteger = 0
         Dim TaskListGrp As New KernelTask.TaskList
         Dim appPathDir As String = Application.StartupPath + "\Data"
